@@ -25,7 +25,7 @@ formatter = logging.Formatter(
 handler.setFormatter(formatter)
 root.addHandler(handler)
 
-logger: logging.Logger = logging.getLogger('epever-solar-client')
+logger: logging.Logger = logging.getLogger('epever-solar-client2')
 
 # --------------------------------------------------------------
 
@@ -89,7 +89,7 @@ def log_info(info, *arguments):
 
 
 class EpeverSolarClient:
-    _host = "192.168.88.78"
+    _host = "192.168.1.78"
     _port = 9999
 
     def __init__(self, host, port):
@@ -432,7 +432,7 @@ class EpeverSolarClient:
         try:
             success = client.connect()
             if not success:
-                log_info("Cannot connect to Epever server")
+                log_info("Cannot connect to Epever server2")
                 return None
 
             client.send(bytes.fromhex("20020000"))
@@ -485,40 +485,40 @@ class Job(threading.Thread):
                           payload=json.dumps(event))
         log_info("EVENT:", event)
 
-    def execute(self, publisher, epever_client):
+    def execute(self, publisher, epever_client2):
         if self.init:
-            data = epever_client.run("get_device_info")
+            data = epever_client2.run("get_device_info")
             if data is not None:
                 self.publish(publisher, "info", data)
             else:
                 logger.error("get_device_info")
 
-            data = epever_client.run("get_battery_settings")
+            data = epever_client2.run("get_battery_settings")
             if data is not None:
                 self.publish(publisher, "settings", data)
             else:
                 logger.error("get_battery_settings")
 
-        data = epever_client.run("get_data")
+        data = epever_client2.run("get_data")
         if data is not None:
             self.publish(publisher, "data", data)
         else:
             logger.error("get_data")
 
         if datetime.datetime.now().minute % 5 == 0 or self.init:
-            data = epever_client.run("get_battery_stat")
+            data = epever_client2.run("get_battery_stat")
             if data is not None:
                 self.publish(publisher, "stat", data)
             else:
                 logger.error("get_battery_stat")
 
-            data = epever_client.run("get_battery_status")
+            data = epever_client2.run("get_battery_status")
             if data is not None:
                 self.publish(publisher, "status", data)
             else:
                 logger.error("get_battery_status")
 
-            data = epever_client.run("get_battery_load")
+            data = epever_client2.run("get_battery_load")
             if data is not None:
                 self.publish(publisher, "load", data)
             else:
@@ -553,9 +553,9 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
     request = msg.payload.decode("ascii")
     event_name = request.split("_")[-1]
-    epever_client = userdata.get("epever_client")
+    epever_client2 = userdata.get("epever_client2")
 
-    data = epever_client.run(request)
+    data = epever_client2.run(request)
     if data is not None:        
         base_topic = userdata.get("base_topic")
         client.publish(base_topic+"/" + event_name,
@@ -610,13 +610,13 @@ def main():
     base_topic = mqtt_topic + '/{}'.format(device_id)
 
     publisher = mqtt.Client()
-    epever_client = EpeverSolarClient(HOST, PORT)
+    epever_client2 = EpeverSolarClient(HOST, PORT)
 
     signal.signal(signal.SIGTERM, signal_handler)
     signal.signal(signal.SIGINT, signal_handler)
 
     job = Job(interval=timedelta(seconds=WAIT_TIME_SECONDS),
-              publisher=publisher, epever_client=epever_client)
+              publisher=publisher, epever_client2=epever_client2)
     job.start()
 
     publisher.on_connect = on_connect
@@ -625,7 +625,7 @@ def main():
     publisher.username_pw_set(username=MQTT_USER, password=MQTT_PASSWD)
 
     publisher.user_data_set(
-        {"base_topic": base_topic, "epever_client": epever_client})
+        {"base_topic": base_topic, "epever_client2": epever_client2})
     publisher.connect(MQTT_HOST, MQTT_PORT, 60)
 
     publisher.loop_start()
