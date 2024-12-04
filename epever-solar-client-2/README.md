@@ -19,7 +19,7 @@ add this in Homeassistant configuration.yaml
 mqtt:
   sensor:
     - name: "input voltage"
-      unique_id: input_voltage
+      unique_id: epever2_input_voltage
       state_topic: "home/epever-solar2/epever/data"
       value_template: '{{ value_json["chargingInputVoltage"] }}'
       unit_of_measurement: "V"
@@ -30,7 +30,7 @@ mqtt:
         model: "V01.02"
 
     - name: "input current"
-      unique_id: station_input_current
+      unique_id: epever2_station_input_current
       state_topic: "home/epever-solar2/epever/data"
       value_template: '{{ value_json["chargingInputCurrent"] }}'
       unit_of_measurement: "A"
@@ -41,7 +41,7 @@ mqtt:
         model: "V01.02"
 
     - name: "input power"
-      unique_id: station_input_power
+      unique_id: epever2_station_input_power
       state_topic: "home/epever-solar2/epever/data"
       value_template: '{{ value_json["chargingInputPower"] }}'
       #last_reset_value_template: "{{value_json.lastUpdate | int | timestamp_custom('%d.%m.%Y %H:%M'}}"
@@ -54,7 +54,7 @@ mqtt:
 
     - name: "battery charging voltage"
       state_topic: "home/epever-solar2/epever/data"
-      unique_id: station_battery_charging_voltage
+      unique_id: epever2_station_battery_charging_voltage
       value_template: '{{value_json["chargingOutputVoltage"] }}'
       unit_of_measurement: "V"
       device_class: voltage
@@ -66,7 +66,7 @@ mqtt:
 
     - name: "battery charging current"
       state_topic: "home/epever-solar2/epever/data"
-      unique_id: station_battery_charging_current
+      unique_id: epever2_station_battery_charging_current
       value_template: '{{value_json["chargingOutputCurrent"] }}'
       unit_of_measurement: "A"
       device_class: current
@@ -78,7 +78,7 @@ mqtt:
 
     - name: "battery charge level"
       state_topic: "home/epever-solar2/epever/data"
-      unique_id: station_battery_charge_level
+      unique_id: epever2_station_battery_charge_level
       value_template: '{{value_json["batterySoC"] }}'
       unit_of_measurement: "%"
       device_class: battery
@@ -90,7 +90,7 @@ mqtt:
 
     - name: "charging status"
       state_topic: "home/epever-solar2/epever/status"
-      unique_id: station_charging_status
+      unique_id: epever2_station_charging_status
       value_template: '{{value_json["equipmentStatus"]["battery"] }}'
       device:
         identifiers: Tracer2210AN
