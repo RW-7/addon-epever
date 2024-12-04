@@ -1,5 +1,5 @@
 name: "Epever solar client2"
-description: "Epever solar client2"
+description: "Epever solar client 2 für einen 2. Gateway"
 version: "1.2.11"
 slug: "epever-solar-client2"
 init: false
